@@ -1,0 +1,210 @@
+USE [master]
+GO
+CREATE DATABASE [ProjectSchedule]
+GO
+ALTER DATABASE [ProjectSchedule] SET COMPATIBILITY_LEVEL = 140
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [ProjectSchedule].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [ProjectSchedule] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [ProjectSchedule] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [ProjectSchedule] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [ProjectSchedule] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [ProjectSchedule] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [ProjectSchedule] SET AUTO_CLOSE OFF 
+GO
+ALTER DATABASE [ProjectSchedule] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [ProjectSchedule] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [ProjectSchedule] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [ProjectSchedule] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [ProjectSchedule] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [ProjectSchedule] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [ProjectSchedule] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [ProjectSchedule] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [ProjectSchedule] SET  DISABLE_BROKER 
+GO
+ALTER DATABASE [ProjectSchedule] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [ProjectSchedule] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [ProjectSchedule] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [ProjectSchedule] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [ProjectSchedule] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [ProjectSchedule] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [ProjectSchedule] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [ProjectSchedule] SET RECOVERY SIMPLE 
+GO
+ALTER DATABASE [ProjectSchedule] SET  MULTI_USER 
+GO
+ALTER DATABASE [ProjectSchedule] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [ProjectSchedule] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [ProjectSchedule] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [ProjectSchedule] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+ALTER DATABASE [ProjectSchedule] SET DELAYED_DURABILITY = DISABLED 
+GO
+ALTER DATABASE [ProjectSchedule] SET QUERY_STORE = OFF
+GO
+USE [ProjectSchedule]
+GO
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[dependancies](
+	[projectRef] [int] NOT NULL,
+	[step] [int] NOT NULL,
+	[dependantOnStep] [int] NOT NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[developer](
+	[Developer] [nchar](40) NOT NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[hols](
+	[Date] [date] NOT NULL,
+	[Hours] [float] NOT NULL,
+	[Developer] [nchar](10) NOT NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[otherNonAvailability](
+	[Date] [date] NOT NULL,
+	[Hours] [float] NOT NULL,
+	[Developer] [nchar](10) NOT NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[project](
+	[Short Desc] [varchar](80) NOT NULL,
+	[Status] [varchar](30) NOT NULL,
+	[CostGBP] [float] NOT NULL,
+	[BenefitGBP] [float] NOT NULL,
+	[Skills] [varchar](80) NOT NULL,
+	[Long Description] [varchar](max) NOT NULL,
+	[Documentation Location] [varchar](max) NOT NULL,
+	[Assigned Duration] [int] NOT NULL,
+	[Customer] [varchar](80) NOT NULL,
+	[Customer Contact] [varchar](80) NOT NULL,
+	[IT Contact] [varchar](80) NOT NULL,
+	[Criticality Status] [varchar](20) NOT NULL,
+	[Required By Date] [date] NOT NULL,
+	[Initial Planned Start] [date] NULL,
+	[Current Planned Start] [date] NULL,
+	[Act Start] [date] NULL,
+	[% Complete] [int] NULL,
+	[Act End Date] [date] NULL,
+	[Hierarchy] [int] NULL,
+	[projectRef] [int] NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[scheduleActual](
+	[date] [date] NOT NULL,
+	[step] [int] NOT NULL,
+	[dev] [nchar](3) NOT NULL,
+	[projectRef] [int] NOT NULL,
+	[Hours] [float] NOT NULL,
+	[Hierarchy] [int] NULL,
+	[Complete] [varchar](1) NULL,
+	[REF] [int] IDENTITY(1,1) NOT NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[scheduleIdeal](
+	[date] [date] NOT NULL,
+	[step] [int] NOT NULL,
+	[dev] [nchar](3) NOT NULL,
+	[projectRef] [int] NOT NULL,
+	[Hours] [float] NOT NULL,
+	[Hierarchy] [int] NULL,
+	[Complete] [varchar](1) NULL,
+	[REF] [int] IDENTITY(1,1) NOT NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[status](
+	[Status] [varchar](30) NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[stdWeeklyMeetings](
+	[DayOfWeek] [nchar](3) NOT NULL,
+	[Hours] [float] NOT NULL,
+	[Developer] [nchar](10) NOT NULL
+) ON [PRIMARY]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[stdWorkHrs](
+	[DayOfWeek] [nchar](3) NOT NULL,
+	[Hours] [float] NOT NULL
+) ON [PRIMARY]
+GO
+USE [master]
+GO
+ALTER DATABASE [ProjectSchedule] SET  READ_WRITE 
+GO
